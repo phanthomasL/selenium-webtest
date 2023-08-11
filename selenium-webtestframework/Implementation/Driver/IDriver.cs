@@ -1,4 +1,6 @@
-namespace TSystems.BFS.WebTest.NewWebTestApi.Implementation.Driver.TestDriver
+using selenium_webtestframework.Implementation.Driver.Util;
+
+namespace selenium_webtestframework.Implementation.Driver
 {
     public interface IDriver : IDisposable
     {

@@ -1,10 +1,16 @@
-namespace TSystems.BFS.WebTest.NewWebTestApi.Implementation.Driver.TestDriver.Web
+using System.Collections.ObjectModel;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
+using selenium_webtestframework.Implementation.Driver.Util;
+
+namespace selenium_webtestframework.Implementation.Driver
 {
     public class WebDriver : IWebdriver
     {
-        private static Synchronisation _sync;
+        private static Synchronisation _sync = null!;
         public Configuration Configuration { get; set; }
-        public IEosWebDriver Driver { get; set; }
+        public IWebdriver Driver { get; set; }
 
         public WebDriver(Configuration configuration)
         {
@@ -13,7 +19,12 @@ namespace TSystems.BFS.WebTest.NewWebTestApi.Implementation.Driver.TestDriver.We
             _sync = new Synchronisation();
         }
 
-        public string Url { get => Driver.Url; set => Driver.Url = value; }
+        public string Url
+        {
+            get => Driver.Url;
+            set => Driver.Url = value;
+        }
+
         public string Title => Driver.Title;
         public string PageSource => Driver.PageSource;
         public string CurrentWindowHandle => Driver.CurrentWindowHandle;
@@ -99,7 +110,7 @@ namespace TSystems.BFS.WebTest.NewWebTestApi.Implementation.Driver.TestDriver.We
 
         private void CreateInstance()
         {
-            IEosWebDriver driver;
+            IWebdriver driver;
             switch (Configuration.BrowserType)
             {
                 case "Firefox":
@@ -127,7 +138,8 @@ namespace TSystems.BFS.WebTest.NewWebTestApi.Implementation.Driver.TestDriver.We
 
                 case "ChromeHeadless":
                     var chromeOptions = new ChromeOptions();
-                    chromeOptions.AddArguments($"--window-size={Configuration.BrowserWindowSize.Width},{Configuration.BrowserWindowSize.Height}",
+                    chromeOptions.AddArguments(
+                        $"--window-size={Configuration.BrowserWindowSize.Width},{Configuration.BrowserWindowSize.Height}",
                         "--start-maximized", "--headless");
                     driver = new ChromeDriver(chromeOptions);
                     break;
@@ -138,32 +150,12 @@ namespace TSystems.BFS.WebTest.NewWebTestApi.Implementation.Driver.TestDriver.We
             }
 
             driver.Url = Configuration.AnmeldeUrl;
-            ResizeBrowserWindow(driver);
+
             Driver = driver;
         }
 
-        private void ResizeBrowserWindow(IWebDriver driverInstance)
-        {
-#if !NET
-            // Auf zweiten Monitor positionieren wenn vorhanden
 
-            var monitor = Screen.FromPoint(new Point(Screen.PrimaryScreen.Bounds.Right + 1, Screen.PrimaryScreen.Bounds.Bottom));
-            var browserWindowPosition = new Point(monitor.Bounds.X, monitor.Bounds.Y);
-            driverInstance.Manage().Window.Position = browserWindowPosition;
-
-            if (Configuration.BrowserWindowSize.Width != 0 && Configuration.BrowserWindowSize.Height != 0)
-            {
-                //var calculatedBrowserWindowsSize = new Size(monitor.Bounds.Width / 2, monitor.Bounds.Height / 2);
-                driverInstance.Manage().Window.Size = Configuration.BrowserWindowSize;
-            }
-            else
-            {
-                driverInstance.Manage().Window.Maximize();
-            }
-#endif
-        }
-
-        private class EdgeDriver : OpenQA.Selenium.Edge.EdgeDriver, IEosWebDriver
+        private class EdgeDriver : OpenQA.Selenium.Edge.EdgeDriver, IWebdriver
         {
             public Configuration Configuration { get; set; }
         }
@@ -184,6 +176,7 @@ namespace TSystems.BFS.WebTest.NewWebTestApi.Implementation.Driver.TestDriver.We
         private class FireFoxDriver : FirefoxDriver, IWebdriver
         {
             public Configuration Configuration { get; set; }
+
             public FireFoxDriver()
             {
             }
@@ -193,3 +186,4 @@ namespace TSystems.BFS.WebTest.NewWebTestApi.Implementation.Driver.TestDriver.We
             }
         }
     }
+}

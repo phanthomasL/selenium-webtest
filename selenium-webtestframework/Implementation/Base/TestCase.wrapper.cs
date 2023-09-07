@@ -1,6 +1,6 @@
 using selenium_webtestframework.Implementation.Functions.Interactions;
 
-namespace selenium_webtestframework.Implementation;
+namespace selenium_webtestframework.Implementation.Base;
 
 /// <summary>
 /// This file contains all wrapper driver methods which are called in the test cases
@@ -9,6 +9,6 @@ public partial class Testcase
 {
     public void ClickButton(string buttonTitle)
     {
-        this.FuncClickButton(buttonTitle);
+        TestCaseWebDriver.ClickButton(buttonTitle);
     }
 }

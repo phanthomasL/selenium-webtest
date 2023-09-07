@@ -1,4 +1,4 @@
-using selenium_webtestframework.Implementation;
+using selenium_webtestframework.Implementation.Base;
 
 namespace selenium_webtestframework.Webtest
 {

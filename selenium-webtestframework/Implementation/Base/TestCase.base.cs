@@ -1,8 +1,7 @@
 using OpenQA.Selenium;
-using selenium_webtestframework.Implementation.Base;
 using selenium_webtestframework.Implementation.Base.Driver;
 
-namespace selenium_webtestframework.Implementation;
+namespace selenium_webtestframework.Implementation.Base;
 
 [TestClass]
   public  abstract partial class Testcase : TestRun, ITestcase {

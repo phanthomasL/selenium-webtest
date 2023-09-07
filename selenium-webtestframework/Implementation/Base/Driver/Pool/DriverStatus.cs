@@ -1,6 +1,6 @@
 ﻿namespace selenium_webtestframework.Implementation.Base.Driver.Pool;
 
-public enum DriverStatus
+internal enum DriverStatus
 {
     Free,
     InUse

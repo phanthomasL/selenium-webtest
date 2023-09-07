@@ -1,5 +1,4 @@
 using System.Drawing;
-using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using selenium_webtestframework.Implementation.Base.Driver;

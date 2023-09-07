@@ -1,5 +1,4 @@
 ﻿using OpenQA.Selenium;
-using selenium_webtestframework.Implementation.Driver.Functions.Exception;
 using System.Collections.ObjectModel;
 using Moq;
 using selenium_webtestframework.Implementation.Functions.Interactions;
@@ -33,7 +32,7 @@ namespace selenium_webtestframework.Unittest.Functions
                 .Returns(new ReadOnlyCollection<IWebElement>(new[] { _webElementMock.Object }));
 
             // Act
-            _testcaseMock.Object.FuncClickButton(btnTitle);
+            _webDriverMock.Object.ClickButton(btnTitle);
 
             // Assert
             _webElementMock.Verify(w => w.Click(), Times.Once);
@@ -48,7 +47,7 @@ namespace selenium_webtestframework.Unittest.Functions
                 .Returns(new ReadOnlyCollection<IWebElement>(new IWebElement[] { }));
 
             // Act & Assert
-            var equals = Assert.ThrowsException<Exception>(() => _testcaseMock.Object.FuncClickButton(btnTitle)).Message
+            var equals = Assert.ThrowsException<Exception>(() => _webDriverMock.Object.ClickButton(btnTitle)).Message
                 .Equals("No element found with xpath //button[text()='Submit']. ");
             Assert.IsTrue(equals);
 
@@ -63,7 +62,7 @@ namespace selenium_webtestframework.Unittest.Functions
                 .Returns(new ReadOnlyCollection<IWebElement>(new[] { _webElementMock.Object, _webElementMock.Object }));
 
             // Act & Assert
-            var equals = Assert.ThrowsException<Exception>(() => _testcaseMock.Object.FuncClickButton(btnTitle)).Message
+            var equals = Assert.ThrowsException<Exception>(() => _webDriverMock.Object.ClickButton(btnTitle)).Message
                 .Equals("Multiple elements found with xpath //button[text()='Submit'].  ");
             Assert.IsTrue(equals);
         }

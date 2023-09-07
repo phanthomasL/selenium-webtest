@@ -1,7 +1,3 @@
-using OpenQA.Selenium;
-using selenium_webtestframework.Implementation.Base.Driver;
-using selenium_webtestframework.Implementation.Driver.Util;
-
 namespace selenium_webtestframework.Implementation.Base.Driver.Util;
 
 internal class Synchronisation

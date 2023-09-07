@@ -1,5 +1,4 @@
 using OpenQA.Selenium.Support.UI;
-using selenium_webtestframework.Implementation.Base.Driver;
 
 namespace selenium_webtestframework.Implementation.Base.Driver.Util;
 

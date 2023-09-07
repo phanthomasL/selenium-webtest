@@ -1,4 +1,4 @@
-namespace selenium_webtestframework.Implementation;
+namespace selenium_webtestframework.Implementation.Base;
 
 /// <summary>
 /// This file contains the helper methods for the test cases like the login method which can be used in the test cases

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace selenium_webtestframework.Implementation.Functions.Exception
+﻿namespace selenium_webtestframework.Implementation.Functions.Exception
 {
     public class MultipleElementsFoundException : System.Exception
     {

@@ -1,15 +1,4 @@
-﻿using Moq;
-using OpenQA.Selenium.Chrome;
-using selenium_webtestframework.Implementation.Base.Driver;
-using selenium_webtestframework.Implementation.Base.Driver.Pool;
-using selenium_webtestframework.Implementation.Base.Driver.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace selenium_webtestframework.Unittest.Base
+﻿namespace selenium_webtestframework.Unittest.Base
 {
     //[TestClass]
     //public class DriverPoolTests

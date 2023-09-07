@@ -65,6 +65,10 @@
               "target": "Package",
               "version": "[17.6.0, )"
             },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.69, )"
+            },
             "Selenium.WebDriver": {
               "target": "Package",
               "version": "[4.11.0, )"

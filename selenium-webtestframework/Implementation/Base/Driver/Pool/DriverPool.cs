@@ -86,7 +86,6 @@ public class DriverPool<T> : IDriverPool<T> where T : notnull
     public void AddNewDriver()
     {
         var genericType = typeof(T);
-
         lock (_lockObject)
         {
             var newDriver = (T)Activator.CreateInstance(genericType, args: _configuration)!;
@@ -104,30 +103,20 @@ public class DriverPool<T> : IDriverPool<T> where T : notnull
     /// <exception cref="Exception"></exception>
     private int GetNumberOfConfiguredWorkers()
     {
-        // TODO: ParallelizeAttribute; Solange sonst maximal mögliche Anzahl an Threads
-        //var assembly = typeof(DriverPool<T>).Assembly;
-        //var attributes = assembly.GetCustomAttributes(typeof(ParallelizeAttribute), false);
-        //if (attributes.Length <= 0 || attributes[0] is not ParallelizeAttribute attribute)
-        //{
-        //    throw new Exception("Die Anzahl von Workern kann nicht bestimmen werden");
-        //}
+       
         var attribute = new ParallelizeAttribute
         {
             Workers = 0
         };
-        if (!attribute.Workers.Equals(0)) return attribute.Workers;
-        GetCpuInfo(out var numberOfLogicalProcessors);
-        return numberOfLogicalProcessors;
-
+        return !attribute.Workers.Equals(0) ? attribute.Workers : GetCpuInfo();
     }
 
     /// <summary>
     /// Determines the max. possible number of workers
     /// </summary>
-    /// <param name="numberOfLogicalProcessors"></param>
-    private void GetCpuInfo(out int numberOfLogicalProcessors)
+    private int GetCpuInfo()
     {
-        numberOfLogicalProcessors = Environment.ProcessorCount;
+        return Environment.ProcessorCount;
     }
 
 }

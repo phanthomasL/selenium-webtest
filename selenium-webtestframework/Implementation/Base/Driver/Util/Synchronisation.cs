@@ -2,7 +2,6 @@ namespace selenium_webtestframework.Implementation.Base.Driver.Util;
 
 internal class Synchronisation
 {
-    internal static int PollingThreshold = 10;
 
     /// <summary>
     /// Wait for the angular page to be ready
@@ -36,7 +35,7 @@ internal class Synchronisation
         }
         catch (Exception e)
         {
-            throw new Exception("TPage Not Ready " + e.Message);
+            throw new Exception("Page Not Ready " + e.Message);
         }
     }
 

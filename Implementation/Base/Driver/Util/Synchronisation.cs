@@ -89,7 +89,7 @@ internal class Synchronisation(Configuration configuration)
                     callback(err.message);
                 }
             }"
-        ).ToString()!.Equals("complete");
+        )?.ToString() == "complete";
     }
 
     /// <summary>

@@ -1,4 +1,3 @@
-using OpenQA.Selenium;
 using selenium_webtestframework.Implementation.Base.Driver;
 
 namespace selenium_webtestframework.Implementation.Base;
@@ -35,12 +34,20 @@ namespace selenium_webtestframework.Implementation.Base;
           TestContext.WriteLine($"Schreibe Screenshot-Datei {screenshotFilename}");
           var screenshotBytes = TestCaseWebDriver.GetScreenshot().AsByteArray;
           File.WriteAllBytes(screenshotFilename, screenshotBytes);
+
+          var pageSourceFilename = Path.Combine(TestContext.TestRunResultsDirectory, $"{GetType().Name}_{DateTime.Now:HH.mm.ss}.html");
+          try
+          {
+              File.WriteAllText(pageSourceFilename, TestCaseWebDriver.PageSource);
+              TestContext.AddResultFile(pageSourceFilename);
+          }
+          catch { }
           TestContext.AddResultFile(screenshotFilename);
       }
 
       private void ResetDrivers()
       {
-          TestCaseWebDriver.Url = TestCaseWebDriver.Configuration.LoginUrl;
+          TestCaseWebDriver.Url = TestCaseWebDriver.Configuration!.LoginUrl;
           WebDriver = TestCaseWebDriver;
       }
   }

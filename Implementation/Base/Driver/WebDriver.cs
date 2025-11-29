@@ -9,8 +9,8 @@ namespace selenium_webtestframework.Implementation.Base.Driver
     public class WebDriver : IWebdriver
     {
         private readonly Synchronisation _sync;
-        public Configuration Configuration { get; set; }
-        public IWebdriver Driver { get; set; }
+        public Configuration? Configuration { get; set; }
+        public IWebdriver Driver { get; set; } = null!;
         private bool _disposed;
 
         public WebDriver(Configuration configuration)
@@ -106,17 +106,17 @@ namespace selenium_webtestframework.Implementation.Base.Driver
             return Driver.SwitchTo();
         }
 
-        public object ExecuteScript(string script, params object[] args)
+        public object? ExecuteScript(string script, params object?[] args)
         {
             return Driver.ExecuteScript(script, args);
         }
 
-        public object ExecuteScript(PinnedScript script, params object[] args)
+        public object? ExecuteScript(PinnedScript script, params object?[] args)
         {
             return Driver.ExecuteScript(script, args);
         }
 
-        public object ExecuteAsyncScript(string script, params object[] args)
+        public object? ExecuteAsyncScript(string script, params object?[] args)
         {
             return Driver.ExecuteAsyncScript(script, args);
         }
@@ -124,45 +124,68 @@ namespace selenium_webtestframework.Implementation.Base.Driver
         private void CreateInstance()
         {
             IWebdriver driver;
-            switch (Configuration.BrowserType)
+            try
             {
-                case "Firefox":
-                    driver = new FireFoxDriver();
-                    break;
+                switch (Configuration!.BrowserType)
+                {
+                    case "Firefox":
+                        var ffOptionsStd = new FirefoxOptions();
+                        ffOptionsStd.AddArguments($"--width={Configuration!.BrowserWindowSize.Width}",
+                            $"--height={Configuration!.BrowserWindowSize.Height}");
+                        driver = new FireFoxDriver(ffOptionsStd);
+                        break;
 
+                    case "FirefoxHeadless":
+                        var ffOptions = new FirefoxOptions();
+                        ffOptions.AddArguments("-headless",
+                            $"--width={Configuration!.BrowserWindowSize.Width}",
+                            $"--height={Configuration!.BrowserWindowSize.Height}");
+                        driver = new FireFoxDriver(ffOptions);
+                        break;
 
-                case "FirefoxHeadless":
-                    var ffOptions = new FirefoxOptions();
-                    ffOptions.AddArguments("-headless", $"--width={Configuration.BrowserWindowSize.Width}",
-                        $"--height={Configuration.BrowserWindowSize.Height}");
-                    driver = new FireFoxDriver(ffOptions);
-                    break;
+                    case "Edge":
+                        driver = new EdgeDriver();
+                        break;
 
+                    case "Chrome":
+                        var chromeStd = new ChromeOptions();
+                        chromeStd.AddArguments(
+                            $"--window-size={Configuration!.BrowserWindowSize.Width},{Configuration!.BrowserWindowSize.Height}",
+                            "--headless=new", "--disable-gpu", "--no-sandbox");
+                        driver = new ChromeDriver(chromeStd);
+                        break;
 
-                case "Edge":
-                    driver = new EdgeDriver();
-                    break;
+                    case "ChromeHeadless":
+                        var chromeOptions = new ChromeOptions();
+                        chromeOptions.AddArguments(
+                            $"--window-size={Configuration!.BrowserWindowSize.Width},{Configuration!.BrowserWindowSize.Height}",
+                            "--headless=new", "--disable-gpu", "--no-sandbox");
+                        driver = new ChromeDriver(chromeOptions);
+                        break;
 
+                    default:
+                        throw new Exception("No valid browser configured in appsettings (BrowserType)");
+                }
 
-                case "Chrome":
-                    driver = new ChromeDriver();
-                    break;
-
-
-                case "ChromeHeadless":
-                    var chromeOptions = new ChromeOptions();
-                    chromeOptions.AddArguments(
-                        $"--window-size={Configuration.BrowserWindowSize.Width},{Configuration.BrowserWindowSize.Height}",
-                        "--start-maximized", "--headless");
-                    driver = new ChromeDriver(chromeOptions);
-                    break;
-
-
-                default:
-                    throw new Exception("In der App.configuration wurde kein valider Browser hinterlegt");
+                driver.Url = Configuration!.LoginUrl;
+                // propagate configuration to inner driver types
+                switch (driver)
+                {
+                    case EdgeDriver e:
+                        e.Configuration = Configuration;
+                        break;
+                    case ChromeDriver c:
+                        c.Configuration = Configuration;
+                        break;
+                    case FireFoxDriver f:
+                        f.Configuration = Configuration;
+                        break;
+                }
             }
-
-            driver.Url = Configuration.LoginUrl;
+            catch (WebDriverException wde)
+            {
+                throw new Exception("Failed to create WebDriver session. Ensure browser and driver binaries are available and compatible.", wde);
+            }
 
             Driver = driver;
         }
@@ -170,7 +193,7 @@ namespace selenium_webtestframework.Implementation.Base.Driver
 
         private class EdgeDriver : OpenQA.Selenium.Edge.EdgeDriver, IWebdriver
         {
-            public Configuration Configuration { get; set; }
+            public Configuration? Configuration { get; set; }
         }
 
         private class ChromeDriver : OpenQA.Selenium.Chrome.ChromeDriver, IWebdriver
@@ -183,12 +206,12 @@ namespace selenium_webtestframework.Implementation.Base.Driver
             {
             }
 
-            public Configuration Configuration { get; set; }
+            public Configuration? Configuration { get; set; }
         }
 
         private class FireFoxDriver : FirefoxDriver, IWebdriver
         {
-            public Configuration Configuration { get; set; }
+            public Configuration? Configuration { get; set; }
 
             public FireFoxDriver()
             {

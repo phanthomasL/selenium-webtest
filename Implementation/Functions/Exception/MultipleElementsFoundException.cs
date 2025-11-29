@@ -7,10 +7,8 @@
         /// </summary>
         /// <param name="xpath"></param>
         /// <param name="message"></param>
-        /// <exception cref="System.Exception"></exception>
-        public MultipleElementsFoundException(string xpath, string? message = null) : base(message)
-        {
-            throw new System.Exception($"Multiple elements found with xpath {xpath}.  " + message);
-        }
+        public MultipleElementsFoundException(string xpath, string? message = null)
+            : base($"Multiple elements found with xpath {xpath}.  " + message)
+        { }
     }
 }

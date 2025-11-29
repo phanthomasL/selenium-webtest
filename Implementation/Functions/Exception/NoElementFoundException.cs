@@ -7,10 +7,8 @@
         /// </summary>
         /// <param name="xpath"></param>
         /// <param name="message"></param>
-        /// <exception cref="System.Exception"></exception>
-        public NoElementFoundException(string xpath, string? message = null) : base(message)
-        {
-            throw new System.Exception($"No element found with xpath {xpath}. " + message);
-        }
+        public NoElementFoundException(string xpath, string? message = null)
+            : base($"No element found with xpath {xpath}. " + message)
+        { }
     }
 }

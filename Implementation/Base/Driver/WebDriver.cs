@@ -8,15 +8,16 @@ namespace selenium_webtestframework.Implementation.Base.Driver
 {
     public class WebDriver : IWebdriver
     {
-        private static Synchronisation _sync = null!;
+        private readonly Synchronisation _sync;
         public Configuration Configuration { get; set; }
         public IWebdriver Driver { get; set; }
+        private bool _disposed;
 
         public WebDriver(Configuration configuration)
         {
             Configuration = configuration;
+            _sync = new Synchronisation(configuration);
             CreateInstance();
-            _sync = new Synchronisation();
         }
 
         public string Url
@@ -37,7 +38,19 @@ namespace selenium_webtestframework.Implementation.Base.Driver
 
         public void Dispose()
         {
-            Driver.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            if (disposing)
+            {
+                try { Driver?.Quit(); } catch { /* ignore */ }
+                try { Driver?.Dispose(); } catch { /* ignore */ }
+            }
+            _disposed = true;
         }
 
         public void Quit()
@@ -149,7 +162,7 @@ namespace selenium_webtestframework.Implementation.Base.Driver
                     throw new Exception("In der App.configuration wurde kein valider Browser hinterlegt");
             }
 
-            driver.Url = Configuration.AnmeldeUrl;
+            driver.Url = Configuration.LoginUrl;
 
             Driver = driver;
         }

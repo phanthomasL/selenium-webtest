@@ -3,7 +3,7 @@ using selenium_webtestframework.Implementation.Base;
 namespace selenium_webtestframework.Webtest
 {
     [TestClass]
-    public class WebtestExample : Testcase
+    public class WebtestExample : TestCase
     {
         [TestMethod]
         public void TestMethod1()

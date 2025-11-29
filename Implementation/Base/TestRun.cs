@@ -1,6 +1,7 @@
 using System.Drawing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
+using Microsoft.Extensions.Logging;
 using selenium_webtestframework.Implementation.Base.Driver;
 using selenium_webtestframework.Implementation.Base.Driver.Pool;
 using selenium_webtestframework.Implementation.Base.Driver.Util;
@@ -25,6 +26,8 @@ public class TestRun : ITestRun
     /// Driver pool for the webdrivers to get free drivers and release them
     /// </summary>
     private static IDriverPool<WebDriver> WebDriverPool { get; set; } = null!;
+    private static ILoggerFactory? LoggerFactory { get; set; }
+    private static ILogger<TestRun>? Logger { get; set; }
 
     public IWebdriver WebDriver
     {
@@ -40,6 +43,13 @@ public class TestRun : ITestRun
     public static void AssemblyInitialize(TestContext context)
     {
         DriverConfiguration = GetDriverConfiguration();
+        LoggerFactory = Microsoft.Extensions.Logging.LoggerFactory.Create(builder =>
+        {
+            builder.AddSimpleConsole();
+            builder.SetMinimumLevel(LogLevel.Information);
+        });
+        Logger = LoggerFactory.CreateLogger<TestRun>();
+        Logger.LogInformation("Initializing WebDriver pool");
         WebDriverPool = new DriverPool<WebDriver>(DriverConfiguration, context);
     }
 
@@ -68,13 +78,17 @@ public class TestRun : ITestRun
         var baseUrl = appSettings["BaseUrl"] ??
                       throw new ArgumentException("Fehlende Konfiguration der baseUrl in den AppSettings");
         var applicationUrl = baseUrl;
-        var anmeldeUrl = applicationUrl; // loginurl, falls vorhanden
+        var loginUrl = applicationUrl; // login url, if available
         var browserWindowSize = new Size(
             int.Parse(appSettings["BrowserSizeX"] ??
                       throw new Exception("Kein Browsergröße X in Configuration gefunden")),
             int.Parse(appSettings["BrowserSizeY"] ??
                       throw new Exception("Kein Browsergröße y in Configuration gefunden")));
-        var browserType = appSettings["BrowserTyp"] ?? throw new Exception("Kein Browsertyp in Configuration gefunden");
-        return new Configuration(applicationUrl, browserWindowSize, browserType, anmeldeUrl);
+        var browserType = appSettings["BrowserType"] ?? appSettings["BrowserTyp"] ?? throw new Exception("No browser type found in configuration");
+
+        var defaultTimeoutSeconds = int.TryParse(appSettings["DefaultTimeoutSeconds"], out var dts) ? dts : 5;
+        var pageLoadTimeoutSeconds = int.TryParse(appSettings["PageLoadTimeoutSeconds"], out var plts) ? plts : 30;
+
+        return new Configuration(applicationUrl, browserWindowSize, browserType, loginUrl, defaultTimeoutSeconds, pageLoadTimeoutSeconds);
     }
 }

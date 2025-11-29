@@ -1,7 +1,14 @@
+using selenium_webtestframework.Implementation.Base.Driver.Util;
 namespace selenium_webtestframework.Implementation.Base.Driver.Util;
 
 internal class Synchronisation
 {
+    private readonly Configuration _configuration;
+
+    public Synchronisation(Configuration configuration)
+    {
+        _configuration = configuration;
+    }
 
     /// <summary>
     /// Wait for the angular page to be ready
@@ -12,13 +19,13 @@ internal class Synchronisation
 
         try
         {
-            var timeout = 5;
+            var timeout = _configuration.DefaultTimeoutSeconds;
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
             wait.Until(NgIsReady);
         }
         catch (Exception e)
         {
-            throw new Exception("NG not ready " + e.Message);
+            throw new Exception("NG not ready", e);
         }
     }
 
@@ -30,12 +37,12 @@ internal class Synchronisation
     {
         try
         {
-            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(_configuration.DefaultTimeoutSeconds));
             wait.Until(PageIsReady);
         }
         catch (Exception e)
         {
-            throw new Exception("Page Not Ready " + e.Message);
+            throw new Exception("Page not ready", e);
         }
     }
 
@@ -96,7 +103,7 @@ internal class Synchronisation
     /// <returns></returns>
     private bool PageIsReady(IWebdriver driver)
     {
-        return driver.ExecuteScript("return document.readyState").ToString()!.Equals("complete");
+        return driver.ExecuteScript("return document.readyState")?.ToString() == "complete";
     }
 
 }

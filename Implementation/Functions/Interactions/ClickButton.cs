@@ -34,7 +34,7 @@ namespace selenium_webtestframework.Implementation.Functions.Interactions
             }
             catch (System.Exception e)
             {
-                throw new NotClickableExcpetion(element, e.Message);
+                throw new NotClickableException(element, e.Message, e);
             }
         }
     }

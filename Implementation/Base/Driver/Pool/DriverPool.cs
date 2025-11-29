@@ -63,21 +63,24 @@ public class DriverPool<T> : IDriverPool<T> where T : notnull
     /// <returns></returns>
     public T GetFreeDriver()
     {
-        T freeDriver;
-
         lock (_lockObject)
         {
-            if (DriverInstances.All(keyValuePair => keyValuePair.Value == DriverStatus.InUse))
+            if (DriverInstances.IsEmpty || DriverInstances.All(kv => kv.Value == DriverStatus.InUse))
             {
                 AddNewDriver();
             }
 
-            freeDriver = DriverInstances.FirstOrDefault(keyValuePair => keyValuePair.Value == DriverStatus.Free).Key;
+            var freeEntry = DriverInstances.FirstOrDefault(kv => kv.Value == DriverStatus.Free);
+            if (EqualityComparer<T>.Default.Equals(freeEntry.Key, default!))
+            {
+                // No free driver found even after AddNewDriver; create one more and try again
+                AddNewDriver();
+                freeEntry = DriverInstances.First(kv => kv.Value == DriverStatus.Free);
+            }
 
-            DriverInstances[freeDriver] = DriverStatus.InUse;
+            DriverInstances[freeEntry.Key] = DriverStatus.InUse;
+            return freeEntry.Key;
         }
-
-        return freeDriver;
     }
 
     /// <summary>

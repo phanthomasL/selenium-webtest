@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("selenium-webtestframework")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5d3a1d3ca2be1fcf526bf0513fbc5f2fa830a5d3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+87fa96cd5a6b3ca8146a3c59adf42629a75ca187")]
 [assembly: System.Reflection.AssemblyProductAttribute("selenium-webtestframework")]
 [assembly: System.Reflection.AssemblyTitleAttribute("selenium-webtestframework")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

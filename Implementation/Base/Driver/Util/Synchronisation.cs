@@ -1,14 +1,8 @@
-using selenium_webtestframework.Implementation.Base.Driver.Util;
 namespace selenium_webtestframework.Implementation.Base.Driver.Util;
 
-internal class Synchronisation
+internal class Synchronisation(Configuration configuration)
 {
-    private readonly Configuration _configuration;
-
-    public Synchronisation(Configuration configuration)
-    {
-        _configuration = configuration;
-    }
+    private readonly Configuration _configuration = configuration;
 
     /// <summary>
     /// Wait for the angular page to be ready
@@ -63,6 +57,8 @@ internal class Synchronisation
     /// <returns></returns>
     private bool NgIsReady(IWebdriver driver)
     {
+      
+
         return driver.ExecuteAsyncScript(@"
             var callback = arguments[arguments.length - 1];
             if (document.readyState !== 'complete') 

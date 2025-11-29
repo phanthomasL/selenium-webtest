@@ -5,43 +5,32 @@ namespace selenium_webtestframework.Implementation.Base.Driver.Util;
 /// <summary>
 /// Konfiguration f�r den Testtreiber
 /// </summary>
-public class Configuration
+public class Configuration(string applicationUrl, Size browserWindowSize, string browserType, string loginUrl, int defaultTimeoutSeconds = 5, int pageLoadTimeoutSeconds = 30)
 {
     /// <summary>
     /// Url der Anwendung
     /// </summary>
-    public string ApplicationUrl { get; }
+    public string ApplicationUrl { get; } = applicationUrl;
     /// <summary>
     /// FensterGR��e
     /// </summary>
-    public Size BrowserWindowSize { get; }
+    public Size BrowserWindowSize { get; } = browserWindowSize;
     /// <summary>
     /// BrowserTyp z.B. Chrome, Firefox, Edge
     /// </summary>
-    public string BrowserType { get; }
+    public string BrowserType { get; } = browserType;
     /// <summary>
     /// Login URL
     /// </summary>
-    public string LoginUrl { get; }
+    public string LoginUrl { get; } = loginUrl;
 
     /// <summary>
     /// Default wait timeout in seconds
     /// </summary>
-    public int DefaultTimeoutSeconds { get; }
+    public int DefaultTimeoutSeconds { get; } = defaultTimeoutSeconds;
 
     /// <summary>
     /// Page load timeout in seconds
     /// </summary>
-    public int PageLoadTimeoutSeconds { get; }
-
-
-    public Configuration(string applicationUrl, Size browserWindowSize, string browserType, string loginUrl, int defaultTimeoutSeconds = 5, int pageLoadTimeoutSeconds = 30)
-    {
-        ApplicationUrl = applicationUrl;
-        BrowserWindowSize = browserWindowSize;
-        BrowserType = browserType;
-        LoginUrl = loginUrl;
-        DefaultTimeoutSeconds = defaultTimeoutSeconds;
-        PageLoadTimeoutSeconds = pageLoadTimeoutSeconds;
-    }
+    public int PageLoadTimeoutSeconds { get; } = pageLoadTimeoutSeconds;
 }
